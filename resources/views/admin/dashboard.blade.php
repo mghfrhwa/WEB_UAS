@@ -4,10 +4,15 @@
 <div class="dashboard-container">
     <div class="statistics-container">
         <div class="stats-header">
-            <h2><i class="fas fa-chart-line"></i> Statistik Pesanan</h2>
-            <button class="btn-history" onclick="window.location.href='{{ route('pesanan.riwayat') }}'">
-                <i class="fas fa-history"></i> Riwayat Pesanan
-            </button>
+            <h2><i class="fas fa-money-bill-wave"></i>Statistik Pendapatan</h2>
+            <div class="periode-filter">
+                @foreach(['hari' => 'Hari Ini', 'minggu' => 'Minggu Ini', 'bulan' => 'Bulan Ini', 'tahun' => 'Tahun Ini'] as $val => $label)
+                    <a href="{{ route('laporan.keuangan', ['periode' => $val]) }}"
+                       class="btn-periode {{ $periode === $val ? 'active' : '' }}">
+                        {{ $label }}
+                    </a>
+                @endforeach
+            </div>
         </div>
         
         <div class="stats-grid">
@@ -32,7 +37,7 @@
                 </div>
                 <div class="stat-badge status-proses">Process</div>
             </div>
-            
+
             <div class="stat-card">
                 <div class="stat-icon icon-done">
                     <i class="fas fa-check-circle"></i>
@@ -54,12 +59,76 @@
                 </div>
                 <div class="stat-badge status-total">All</div>
             </div>
+
+            <div class="stat-card">
+                <div class="stat-icon icon-process"><i class="fas fa-hand-holding-usd"></i></div>
+                <div class="stat-content">
+                    <h3 class="stat-count">Rp {{ number_format($stats['total_dp'], 0, ',', '.') }}</h3>
+                    <p class="stat-label">Total DP Masuk</p>
+                </div>
+                <div class="stat-badge status-proses">DP</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon icon-done"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-content">
+                    <h3 class="stat-count">Rp {{ number_format($stats['total_pendapatan'], 0, ',', '.') }}</h3>
+                    <p class="stat-label">Total Lunas</p>
+                </div>
+                <div class="stat-badge status-selesai">Lunas</div>
+            </div>
         </div>
-        
-        <div class="stats-info">
-            <i class="fas fa-info-circle"></i>
-            <span>Data diperbarui secara realtime setiap 30 detik</span>
+    </div>
+
+    <div class="statistics-container" style="margin-bottom: 30px;">
+        <h3 style="margin-bottom: 20px; color: #1f2937;"><i class="fas fa-chart-bar"></i> Grafik Pendapatan</h3>
+        @if(count($grafikData['labels']) > 0)
+            <canvas id="grafikPendapatan" height="100"></canvas>
+        @else
+            <div style="text-align:center; padding: 40px; color: #6b7280;">
+                <i class="fas fa-chart-bar" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                <p>Tidak ada data untuk periode ini.</p>
+            </div>
+        @endif
+    </div>
+
+    <div class="statistics-container">
+        <h3 style="margin-bottom: 20px; color: #1f2937;"><i class="fas fa-list"></i> Riwayat Pembayaran</h3>
+        <div style="overflow-x: auto;">
+            <table class="table-laporan">
+                <thead>
+                    <tr>
+                        <th>Kode Pesanan</th>
+                        <th>Nama Pesanan</th>
+                        <th>Harga Total</th>
+                        <th>Jumlah DP</th>
+                        <th>Sisa</th>
+                        <th>Status</th>
+                        <th>Tanggal Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($riwayat as $p)
+                    <tr>
+                        <td><code>{{ $p->kode_pesanan }}</code></td>
+                        <td>{{ $p->nama_pesanan }}</td>
+                        <td>Rp {{ number_format($p->harga_total, 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($p->jumlah_dp, 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($p->sisa_bayar, 0, ',', '.') }}</td>
+                        <td>
+                            <span class="stat-badge {{ $p->status_pembayaran === 'lunas' ? 'status-selesai' : ($p->status_pembayaran === 'dp' ? 'status-proses' : 'status-menunggu') }}">
+                                {{ strtoupper($p->status_pembayaran) }}
+                            </span>
+                        </td>
+                        <td>{{ \Carbon\Carbon::parse($p->updated_at)->format('d M Y, H:i') }}</td>
+                    </tr>
+                    @empty
+                    <tr><td colspan="7" style="text-align:center; color:#6b7280; padding: 30px;">Tidak ada data.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
+        <div style="margin-top: 20px;">{{ $riwayat->appends(['periode' => $periode])->links() }}</div>
     </div>
 
     <div class="main-menu">
@@ -300,11 +369,73 @@
         .menu-item span { font-size: 1.2rem; }
         .stat-count { font-size: 2rem; }
     }
+
+    periode-filter { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-periode {
+        padding: 8px 18px; border-radius: 8px; border: 1px solid #e2e8f0;
+        color: #374151; text-decoration: none; font-size: 0.9rem; font-weight: 500;
+        transition: all 0.2s;
+    }
+    .btn-periode:hover, .btn-periode.active {
+        background-color: #4f46e5; color: white; border-color: #4f46e5;
+    }
+    .table-laporan { width: 100%; border-collapse: collapse; }
+    .table-laporan th {
+        background: #f8fafc; padding: 12px 16px; text-align: left;
+        font-size: 0.9rem; color: #374151; border-bottom: 2px solid #e2e8f0;
+    }
+    .table-laporan td {
+        padding: 12px 16px; border-bottom: 1px solid #f1f5f9;
+        font-size: 0.95rem; color: #1f2937;
+    }
+    .table-laporan tr:hover td { background: #f8fafc; }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+@if(count($grafikData['labels']) > 0)
+const ctx = document.getElementById('grafikPendapatan').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: @json($grafikData['labels']),
+        datasets: [
+            {
+                label: 'Lunas',
+                data: @json($grafikData['lunas']),
+                backgroundColor: '#10b981',
+                borderRadius: 6,
+            },
+            {
+                label: 'DP',
+                data: @json($grafikData['dp']),
+                backgroundColor: '#3b82f6',
+                borderRadius: 6,
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+                callbacks: {
+                    label: ctx => 'Rp ' + ctx.raw.toLocaleString('id-ID')
+                }
+            }
+        },
+        scales: {
+            y: {
+                ticks: {
+                    callback: val => 'Rp ' + val.toLocaleString('id-ID')
+                }
+            }
+        }
+    }
+});
+@endif
+
 document.addEventListener('DOMContentLoaded', function() {
     // Menghapus event listener hover manual (JS) karena tidak diperlukan lagi
     

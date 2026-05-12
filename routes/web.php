@@ -8,6 +8,7 @@ use App\Http\Controllers\ProgresController;
 use App\Http\Controllers\BahanController;
 use App\Http\Controllers\PemakaianBahanController;
 use App\Http\Controllers\PesananPenggunaController;
+use App\Http\Controllers\LaporanKeuanganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,9 +58,8 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function
 // ====================================================
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    // Ganti closure function dengan pemanggilan Controller
+    Route::get('/', [LaporanKeuanganController::class, 'index'])->name('admin.dashboard');
 
     // --- Manajemen Pesanan ---
     Route::get('/pesanan/riwayat', [PesananController::class, 'riwayat'])->name('pesanan.riwayat');
@@ -70,6 +70,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/pesanan/{id}/edit', [PesananController::class, 'edit'])->name('pesanan.edit');
     Route::put('/pesanan/{id}', [PesananController::class, 'update'])->name('pesanan.update');
     Route::delete('/pesanan/{id}', [PesananController::class, 'destroy'])->name('pesanan.destroy');
+
+    // --- Laporan Keuangan ---
+    Route::get('/laporan-keuangan', [LaporanKeuanganController::class, 'index'])
+        ->name('laporan.keuangan');
+    Route::put('/pesanan/{id}/pembayaran', [LaporanKeuanganController::class, 'updatePembayaran'])
+        ->name('pesanan.updatePembayaran');
 
     // --- Manajemen Progres (DIPERBAIKI) ---
     Route::get('/progres', [ProgresController::class, 'index'])->name('progres.index');
