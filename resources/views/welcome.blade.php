@@ -667,7 +667,7 @@
                         <li><a href="#profil">Profil</a></li>
                         <li><a href="#keunggulan">Keunggulan</a></li>
                         <li><a href="#lokasi">Lokasi</a></li>
-                        <li><a href="#lokasi" class="btn-nav-cta">Hubungi Kami</a></li>
+                        <li><a href="{{ route('login') }}" class="btn-nav-cta">Pesan Sekarang</a></li>
                     </ul>
                 </div>
 
@@ -945,7 +945,7 @@
                     <p style="opacity:0.85;margin-bottom:24px;font-size:0.95rem;">Tim engineer kami siap membantu merencanakan dan mewujudkan kebutuhan konstruksi & las Anda</p>
                     <div class="d-flex gap-3 justify-content-center flex-wrap">
                         <a href="https://wa.me/6285646712902" target="_blank" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:8px;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                        <a href="tel:+6285646712902" style="background:white;color:#4f46e5;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone"></i> Telepon Sekarang</a>
+                        <a href="{{ route('login') }}" style="background:white;color:#4f46e5;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone"></i> Pesan Sekarang</a>
                     </div>
                 </div>
             </div>
