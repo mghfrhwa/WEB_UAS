@@ -558,22 +558,6 @@ table.lk-tbl { width: 100%; border-collapse: collapse; font-size: .875rem; }
         @endif
     </div>
 
-    {{-- ── Menu navigasi ── --}}
-    <div class="menu-grid">
-        <a href="{{ route('pesanan.index') }}" class="menu-card">
-            <i class="fas fa-clipboard-list"></i>
-            <span>Kelola Pesanan</span>
-        </a>
-        <a href="{{ route('bahan.index') }}" class="menu-card">
-            <i class="fas fa-box"></i>
-            <span>Kelola Bahan</span>
-        </a>
-        <a href="{{ route('katalog.index') }}" class="menu-card">
-            <i class="fas fa-book"></i>
-            <span>Kelola Katalog</span>
-        </a>
-    </div>
-
 </div>
 
 <script>
