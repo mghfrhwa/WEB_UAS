@@ -18,7 +18,7 @@ use App\Http\Controllers\AdminDashboardController;
 */
 
 // Redirect halaman utama ('/') langsung ke halaman login
-Route::get('/home', function () {
+Route::get('/', function () {
     return view('welcome');
 });
 
