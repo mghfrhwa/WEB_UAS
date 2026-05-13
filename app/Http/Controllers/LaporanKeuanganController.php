@@ -11,26 +11,35 @@ class LaporanKeuanganController extends Controller
 {
     public function index(Request $request)
     {
-        $periode = $request->get('periode', 'bulan'); // hari, minggu, bulan, tahun
+        $periode     = $request->get('periode', 'bulan');
+        $bulanFilter = $request->get('bulan_filter'); // null = semua bulan
 
-        // Tentukan rentang tanggal berdasarkan periode
         [$startDate, $endDate, $labelFormat, $groupFormat] = $this->getPeriodeRange($periode);
 
-        // Data statistik utama
-        $stats = $this->getStats($startDate, $endDate);
-
-        // Data grafik per periode
         $grafikData = $this->getGrafikData($startDate, $endDate, $periode, $labelFormat, $groupFormat);
 
-        // Riwayat pembayaran dalam periode
-        $riwayat = Pesanan::whereBetween('updated_at', [$startDate, $endDate])
+        // Kalau ada bulan_filter, override range untuk grafik & riwayat
+        if ($bulanFilter) {
+            $tahun        = Carbon::now()->year;
+            $startRiwayat = Carbon::create($tahun, $bulanFilter, 1)->startOfMonth();
+            $endRiwayat   = Carbon::create($tahun, $bulanFilter, 1)->endOfMonth();
+            // Grafik per hari untuk bulan yang dipilih
+            $grafikData   = $this->getGrafikData($startRiwayat, $endRiwayat, 'bulan', 'd M', 'Y-m-d');
+        } else {
+            $startRiwayat = $startDate;
+            $endRiwayat   = $endDate;
+            $grafikData   = $this->getGrafikData($startDate, $endDate, $periode, $labelFormat, $groupFormat);
+        }
+
+        $stats = $this->getStats($startRiwayat, $endRiwayat);
+
+        $riwayat = Pesanan::whereBetween('updated_at', [$startRiwayat, $endRiwayat])
             ->whereIn('status_pembayaran', ['dp', 'lunas'])
             ->orderByDesc('updated_at')
             ->paginate(10);
 
-        return view('admin.dashboard', compact('stats', 'grafikData', 'riwayat', 'periode'));
+        return view('admin.dashboard', compact('stats', 'grafikData', 'riwayat', 'periode', 'bulanFilter'));
     }
-
     private function getPeriodeRange(string $periode): array
     {
         return match ($periode) {
