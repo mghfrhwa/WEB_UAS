@@ -38,7 +38,7 @@ class LaporanKeuanganController extends Controller
             ->orderByDesc('updated_at')
             ->paginate(10);
 
-        return view('admin.dashboard', compact('stats', 'grafikData', 'riwayat', 'periode', 'bulanFilter'));
+        return view('admin.pendapatan.index', compact('stats', 'grafikData', 'riwayat', 'periode', 'bulanFilter'));
     }
     private function getPeriodeRange(string $periode): array
     {
