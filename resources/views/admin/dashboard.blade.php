@@ -161,8 +161,8 @@ table.db-tbl { width: 100%; border-collapse: collapse; font-size: .875rem; }
 
     {{-- Header --}}
     <div class="db-header">
-        <h1>Selamat datang, <span>{{ Auth::user()->nama ?? 'Admin' }}</span> 👋</h1>
-        <p>{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }} &mdash; Ini ringkasan aktivitas hari ini.</p>
+        <h1>Selamat datang, <span>{{ Auth::user()->nama ?? 'Admin' }}</span></h1>
+        <p>{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}.</p>
     </div>
 
     {{-- KPI Pesanan --}}
@@ -221,6 +221,32 @@ table.db-tbl { width: 100%; border-collapse: collapse; font-size: .875rem; }
         </div>
     </div>
 
+    {{-- Shortcut Menu --}}
+    <div class="section-card">
+        <div class="section-title">
+            <i class="fas fa-th"></i>
+            Menu Cepat
+        </div>
+        <div class="shortcut-grid">
+            <a href="{{ route('pesanan.index') }}" class="shortcut-card">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Kelola Pesanan</span>
+            </a>
+            <a href="{{ route('bahan.index') }}" class="shortcut-card">
+                <i class="fas fa-box"></i>
+                <span>Kelola Bahan</span>
+            </a>
+            <a href="{{ route('katalog.index') }}" class="shortcut-card">
+                <i class="fas fa-cogs"></i>
+                <span>Kelola Katalog</span>
+            </a>
+            <a href="{{ route('laporan.keuangan') }}" class="shortcut-card">
+                <i class="fas fa-wallet"></i>
+                <span>Laporan Keuangan</span>
+            </a>
+        </div>
+    </div>
+
     {{-- Pesanan Terbaru --}}
     <div class="section-card">
         <div class="section-title">
@@ -273,32 +299,5 @@ table.db-tbl { width: 100%; border-collapse: collapse; font-size: .875rem; }
             </table>
         </div>
     </div>
-
-    {{-- Shortcut Menu --}}
-    <div class="section-card">
-        <div class="section-title">
-            <i class="fas fa-th"></i>
-            Menu Cepat
-        </div>
-        <div class="shortcut-grid">
-            <a href="{{ route('pesanan.index') }}" class="shortcut-card">
-                <i class="fas fa-clipboard-list"></i>
-                <span>Kelola Pesanan</span>
-            </a>
-            <a href="{{ route('bahan.index') }}" class="shortcut-card">
-                <i class="fas fa-box"></i>
-                <span>Kelola Bahan</span>
-            </a>
-            <a href="{{ route('katalog.index') }}" class="shortcut-card">
-                <i class="fas fa-cogs"></i>
-                <span>Kelola Katalog</span>
-            </a>
-            <a href="{{ route('laporan.keuangan') }}" class="shortcut-card">
-                <i class="fas fa-wallet"></i>
-                <span>Laporan Keuangan</span>
-            </a>
-        </div>
-    </div>
-
 </div>
 @endsection

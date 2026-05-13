@@ -395,46 +395,6 @@ table.lk-tbl { width: 100%; border-collapse: collapse; font-size: .875rem; }
         <div class="lk-alert"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
     @endif
 
-    {{-- ── KPI Cards — Baris 1: Statistik Pesanan ── --}}
-    <div class="kpi-grid">
-
-        <div class="kpi-card kpi-amber">
-            <div class="kpi-head">
-                <div class="kpi-icon"><i class="fas fa-clock"></i></div>
-                <span class="kpi-badge">Pending</span>
-            </div>
-            <div class="kpi-val" id="count-menunggu">0</div>
-            <div class="kpi-label">Menunggu</div>
-        </div>
-
-        <div class="kpi-card kpi-blue">
-            <div class="kpi-head">
-                <div class="kpi-icon"><i class="fas fa-cogs"></i></div>
-                <span class="kpi-badge">Proses</span>
-            </div>
-            <div class="kpi-val" id="count-proses">0</div>
-            <div class="kpi-label">Dalam Proses</div>
-        </div>
-
-        <div class="kpi-card kpi-green">
-            <div class="kpi-head">
-                <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
-                <span class="kpi-badge">Done</span>
-            </div>
-            <div class="kpi-val" id="count-selesai">0</div>
-            <div class="kpi-label">Selesai</div>
-        </div>
-
-        <div class="kpi-card kpi-violet">
-            <div class="kpi-head">
-                <div class="kpi-icon"><i class="fas fa-calendar-alt"></i></div>
-                <span class="kpi-badge">All</span>
-            </div>
-            <div class="kpi-val" id="count-total">0</div>
-            <div class="kpi-label">Total Pesanan</div>
-        </div>
-
-    </div>
 
     {{-- ── KPI Cards — Baris 2: Keuangan ── --}}
     <div class="kpi-grid kpi-grid-2col">
