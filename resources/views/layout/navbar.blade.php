@@ -29,6 +29,11 @@
                     <i class="fas fa-cogs"></i>
                     <span>Katalog</span>
                 </a>
+                {{-- TAMBAH INI --}}
+                <a href="{{ route('laporan.keuangan') }}" class="nav-link">
+                    <i class="fas fa-wallet"></i>
+                    <span>Pendapatan</span>
+                </a>
             
             @elseif(Auth::check() && Auth::user()->peran == 'customer')
                 {{-- MENU KHUSUS CUSTOMER --}}
@@ -89,6 +94,10 @@
                 </a>
                 <a href="{{ route('katalog.index') }}" class="mobile-nav-link">
                     <i class="fas fa-cogs"></i> <span>Katalog</span>
+                </a>
+                <a href="{{ route('laporan.keuangan') }}" class="mobile-nav-link">
+                    <i class="fas fa-wallet"></i>
+                    <span>Pendapatan</span>
                 </a>
 
             @elseif(Auth::check() && Auth::user()->peran == 'customer')

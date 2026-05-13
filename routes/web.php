@@ -9,6 +9,7 @@ use App\Http\Controllers\BahanController;
 use App\Http\Controllers\PemakaianBahanController;
 use App\Http\Controllers\PesananPenggunaController;
 use App\Http\Controllers\LaporanKeuanganController;
+use App\Http\Controllers\AdminDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +60,7 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     // Ganti closure function dengan pemanggilan Controller
-    Route::get('/', [LaporanKeuanganController::class, 'index'])->name('admin.dashboard');
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // --- Manajemen Pesanan ---
     Route::get('/pesanan/riwayat', [PesananController::class, 'riwayat'])->name('pesanan.riwayat');
