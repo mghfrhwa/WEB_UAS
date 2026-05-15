@@ -36,7 +36,7 @@
     --shadow-md: 0 4px 16px rgba(0,0,0,.08);
 }
 
-body { background: var(--bg); font-family: 'Plus Jakarta Sans', sans-serif; }
+body { background: var(--bg); }
 
 /* ── Page wrapper ── */
 .lk-page {

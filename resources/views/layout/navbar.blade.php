@@ -34,7 +34,7 @@
                     <i class="fas fa-wallet"></i>
                     <span>Pendapatan</span>
                 </a>
-            
+
             @elseif(Auth::check() && Auth::user()->peran == 'customer')
                 {{-- MENU KHUSUS CUSTOMER --}}
                 <a href="{{ route('customer.dashboard') }}" class="nav-link">
@@ -62,7 +62,7 @@
                     <div class="user-name">{{ Auth::user()->nama ?? 'User' }}</div>
                     <div class="user-role">{{ ucfirst(Auth::user()->peran ?? 'Guest') }}</div>
                 </div>
-                
+
                 <div class="custom-menu">
                     <a href="#" class="dropdown-item">
                         <i class="fas fa-user-circle"></i> Profil
@@ -247,7 +247,7 @@
     }
 
     .nav-link:hover:before {
-        width: 70%;
+        width: 100%;
     }
 
     .nav-link i {
@@ -257,13 +257,14 @@
 
     /* Active link styling */
     .nav-link.active {
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
+        background: var(--accent-color);
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
+        overflow: visible;
     }
 
-    .nav-link.active:before {
-        width: 70%;
-        background: var(--accent-color);
+    .nav-link.active i {
+        opacity: 1;
     }
 
     /* ============ RIGHT SECTION ============ */
@@ -443,6 +444,7 @@
         font-weight: 600;
         border-radius: 10px;
         transition: var(--transition);
+        border-left: 3px solid transparent;
     }
 
     .mobile-nav-link:hover {
@@ -461,17 +463,28 @@
         color: var(--primary-color);
     }
 
+    /* Active mobile link */
+    .mobile-nav-link.active {
+        background: #e8f8f5;
+        color: var(--accent-color) !important;
+        border-left-color: var(--accent-color);
+    }
+
+    .mobile-nav-link.active i {
+        color: var(--accent-color) !important;
+    }
+
     /* ============ RESPONSIVE ============ */
     @media (max-width: 1024px) {
         .navbar-container {
             padding: 0 20px;
         }
-        
+
         .navbar-menu {
             gap: 5px;
             margin: 0 15px;
         }
-        
+
         .nav-link {
             padding: 12px 15px;
             font-size: 14px;
@@ -482,11 +495,11 @@
         .navbar-menu {
             display: none;
         }
-        
+
         .mobile-menu-toggle {
             display: flex;
         }
-        
+
         .navbar-user .user-info {
             display: none;
         }
@@ -497,31 +510,31 @@
             padding: 0 15px;
             height: 60px;
         }
-        
+
         .brand-main {
             font-size: 1.2rem;
         }
-        
+
         .brand-sub {
             font-size: 0.75rem;
         }
-        
+
         .brand-logo {
             width: 40px;
             height: 40px;
             font-size: 18px;
         }
-        
+
         .navbar-user {
             padding: 5px;
         }
-        
+
         .user-avatar {
             width: 35px;
             height: 35px;
             font-size: 16px;
         }
-        
+
         .mobile-menu {
             top: 60px;
         }
@@ -533,7 +546,7 @@
 function toggleMobileMenu() {
     const mobileMenu = document.getElementById('mobileMenu');
     const isActive = mobileMenu.classList.contains('active');
-    
+
     if (isActive) {
         mobileMenu.classList.remove('active');
         setTimeout(() => {
@@ -551,9 +564,9 @@ function toggleMobileMenu() {
 document.addEventListener('click', function(event) {
     const mobileMenu = document.getElementById('mobileMenu');
     const toggleBtn = document.querySelector('.mobile-menu-toggle');
-    
-    if (mobileMenu.classList.contains('active') && 
-        !mobileMenu.contains(event.target) && 
+
+    if (mobileMenu.classList.contains('active') &&
+        !mobileMenu.contains(event.target) &&
         !toggleBtn.contains(event.target)) {
         toggleMobileMenu();
     }
@@ -561,14 +574,34 @@ document.addEventListener('click', function(event) {
 
 // Mark active link based on current URL
 document.addEventListener('DOMContentLoaded', function() {
-    const currentPath = window.location.pathname;
+    const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
     const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
-    
-    navLinks.forEach(link => {
-        // Simple check to mark active link
-        if (link.getAttribute('href') === currentPath) {
-            link.classList.add('active');
-        }
+
+    navLinks.forEach(function(link) {
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
+
+        try {
+            const linkPath = new URL(href, window.location.origin).pathname.replace(/\/$/, '') || '/';
+            const linkSegments = linkPath.split('/').filter(Boolean);
+            const currentSegments = currentPath.split('/').filter(Boolean);
+
+            // Exact match
+            if (currentPath === linkPath) {
+                link.classList.add('active');
+                return;
+            }
+
+            if (
+                linkSegments.length >= 2 &&
+                currentSegments.length > linkSegments.length &&
+                linkSegments.every(function(seg, i) {
+                    return seg === currentSegments[i];
+                })
+            ) {
+                link.classList.add('active');
+            }
+        } catch(e) {}
     });
 });
 </script>

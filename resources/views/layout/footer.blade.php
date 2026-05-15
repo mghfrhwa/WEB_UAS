@@ -51,7 +51,6 @@
                         <li><a href="{{ route('register') }}"><i class="fas fa-user-plus"></i> Daftar</a></li>
                     @endauth
                     <li><a href="#contact"><i class="fas fa-phone-alt"></i> Kontak Kami</a></li>
-                    <li><a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a></li>
                 </ul>
             </div>
 
@@ -94,9 +93,9 @@
         <div class="footer-bottom">
             <div class="copyright">
                 <p>&copy; {{ date('Y') }} <strong>Jaya Teknik Engineering</strong>. Hak Cipta Dilindungi.</p>
-                <p class="version">Sistem Manajemen Proyek | Versi 2.0 | Kelompok 6 - Kelas 2E</p>
+                <p class="version">Sistem Manajemen Proyek Pengabdian Masyarakat</p>
             </div>
-            
+
             <div class="footer-bottom-links">
                 <a href="#">Kebijakan Privasi</a>
                 <span class="separator">|</span>
@@ -248,7 +247,7 @@
     }
     .copyright p { color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin: 0; }
     .version { font-size: 0.8rem; opacity: 0.7; margin-top: 5px; }
-    
+
     .footer-bottom-links { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
     .footer-bottom-links a {
         color: rgba(255, 255, 255, 0.7);
@@ -280,7 +279,7 @@
         background: #128C7E;
         transform: translateY(-3px);
     }
-    
+
     @keyframes pulse {
         0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
         70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
@@ -308,7 +307,7 @@
     // Support Chat (WA)
     function openSupportChat() {
         const message = "Halo Admin Jaya Teknik, saya butuh bantuan.";
-        const phone = "6285646712902"; 
+        const phone = "6285646712902";
         const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
     }
