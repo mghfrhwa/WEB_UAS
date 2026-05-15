@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class BahanController extends Controller
 {
     public function index() {
-        $bahan = Bahan::all();
+        $bahan = Bahan::paginate(10);
         return view('admin.bahan.index', compact('bahan'));
     }
 

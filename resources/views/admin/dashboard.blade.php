@@ -21,7 +21,7 @@
     --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
     --shadow-md: 0 4px 16px rgba(0,0,0,.08);
 }
-body { background: var(--bg); font-family: 'Plus Jakarta Sans', sans-serif; }
+body { background: var(--bg); }
 
 .db-page { max-width: 1180px; margin: 36px auto; padding: 0 20px 60px; }
 
@@ -124,14 +124,23 @@ table.db-tbl { width: 100%; border-collapse: collapse; font-size: .875rem; }
     background: var(--indigo-l); color: var(--indigo);
     padding: 3px 8px; border-radius: 6px; font-weight: 600;
 }
+
+/* Badge Status — DIPERBAIKI */
 .badge-status {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 3px 10px; border-radius: 20px;
     font-size: .72rem; font-weight: 700;
 }
-.badge-menunggu { background: var(--amber-l);  color: var(--amber); }
-.badge-proses   { background: var(--blue-l);   color: var(--blue); }
-.badge-selesai  { background: var(--green-l);  color: var(--green); }
+.badge-menunggu  { background: var(--amber-l);  color: var(--amber); }
+.badge-proses    { background: var(--blue-l);   color: var(--blue); }
+.badge-selesai   { background: var(--green-l);  color: var(--green); }
+.badge-dibatalkan { background: var(--red-l);   color: var(--red); }
+
+/* Badge Pembayaran */
+.badge-lunas      { background: var(--green-l);  color: var(--green); }
+.badge-dp         { background: var(--blue-l);   color: var(--blue); }
+.badge-belum-bayar { background: var(--amber-l); color: var(--amber); }
+
 .td-soft { color: var(--text-soft); font-size: .82rem; }
 
 /* Shortcut grid */
@@ -267,24 +276,48 @@ table.db-tbl { width: 100%; border-collapse: collapse; font-size: .875rem; }
                 </thead>
                 <tbody>
                     @forelse($pesananTerbaru as $p)
+                    @php
+                        $statusKey     = strtolower($p->status ?? '');
+                        $pembayaranKey = strtolower($p->status_pembayaran ?? '');
+
+                        $statusClass = match($statusKey) {
+                            'menunggu'   => 'badge-menunggu',
+                            'proses'     => 'badge-proses',
+                            'selesai'    => 'badge-selesai',
+                            'dibatalkan' => 'badge-dibatalkan',
+                            default      => 'badge-menunggu',
+                        };
+                        $statusIcon = match($statusKey) {
+                            'menunggu'   => 'fa-clock',
+                            'proses'     => 'fa-cogs',
+                            'selesai'    => 'fa-check-circle',
+                            'dibatalkan' => 'fa-times-circle',
+                            default      => 'fa-clock',
+                        };
+
+                        $pembayaranClass = match($pembayaranKey) {
+                            'lunas'      => 'badge-lunas',
+                            'dp'         => 'badge-dp',
+                            'belum_bayar' => 'badge-belum-bayar',
+                            default      => 'badge-belum-bayar',
+                        };
+                        $pembayaranLabel = match($pembayaranKey) {
+                            'lunas'      => 'Lunas',
+                            'dp'         => 'DP',
+                            'belum_bayar' => 'Belum Bayar',
+                            default      => '-',
+                        };
+                    @endphp
                     <tr>
                         <td><span class="kode-chip">{{ $p->kode_pesanan }}</span></td>
                         <td style="font-weight:600; color:var(--text-dark);">{{ $p->nama_pesanan }}</td>
                         <td>
-                            @php
-                                $sc = ['menunggu'=>'badge-menunggu','proses'=>'badge-proses','selesai'=>'badge-selesai'][$p->status] ?? 'badge-menunggu';
-                                $si = ['menunggu'=>'fa-clock','proses'=>'fa-cogs','selesai'=>'fa-check-circle'][$p->status] ?? 'fa-clock';
-                            @endphp
-                            <span class="badge-status {{ $sc }}">
-                                <i class="fas {{ $si }}"></i> {{ ucfirst($p->status) }}
+                            <span class="badge-status {{ $statusClass }}">
+                                <i class="fas {{ $statusIcon }}"></i> {{ ucfirst($statusKey) }}
                             </span>
                         </td>
                         <td>
-                            @php
-                                $pc = ['lunas'=>'badge-selesai','dp'=>'badge-proses','belum_bayar'=>'badge-menunggu'][$p->status_pembayaran] ?? 'badge-menunggu';
-                                $pl = ['lunas'=>'Lunas','dp'=>'DP','belum_bayar'=>'Belum Bayar'][$p->status_pembayaran] ?? '-';
-                            @endphp
-                            <span class="badge-status {{ $pc }}">{{ $pl }}</span>
+                            <span class="badge-status {{ $pembayaranClass }}">{{ $pembayaranLabel }}</span>
                         </td>
                         <td class="td-soft">{{ \Carbon\Carbon::parse($p->created_at)->format('d M Y') }}</td>
                     </tr>

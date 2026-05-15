@@ -7,14 +7,14 @@ use App\Models\PemakaianBahan;
 use App\Models\Pesanan;
 use App\Models\Bahan;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 
 class PesananController extends Controller
 {
     public function index()
     {
-        // Mengambil semua pesanan 
-        $pesanan = Pesanan::orderBy('created_at', 'desc')->get();
+        // Mengambil pesanan dengan pagination 10 data per halaman
+        $pesanan = Pesanan::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.pesanan.index', compact('pesanan'));
     }
 
@@ -105,7 +105,7 @@ class PesananController extends Controller
             'status'       => $request->status,
             'biaya_jasa'   => $request->biaya_jasa ?? 0,
             // Perkiraan dari form dipertahankan jika tidak ada trigger otomatis
-            'tanggal_mulai' => $request->tanggal_mulai, 
+            'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
         ];
 
@@ -165,14 +165,14 @@ class PesananController extends Controller
             ->route('pesanan.show', $pesanan->id)
             ->with('success', 'Pesanan & total biaya berhasil diperbarui');
     }
-    
+
     public function destroy($id)
     {
         Pesanan::destroy($id);
 
         return redirect()->route('pesanan.index')->with('success', 'Pesanan berhasil dihapus');
     }
-    
+
     public function riwayat()
     {
         $pesanan = Pesanan::where('status', 'Selesai')
